@@ -108,4 +108,3 @@ class QImageSelect(QDialog):
         def mouseReleaseEvent(self, event):
             if self.rubberband.isVisible() and event.button() == Qt.LeftButton:
                 self.selected_rect = self.rubberband.geometry().normalized()
-                print(self.selected_rect)
