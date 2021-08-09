@@ -13,7 +13,7 @@ class QImageSelect(QDialog):
     title : str
         Dialog title
     image : Union[str, QPixmap]
-        Image path or pixmap
+        Image path or qpixmap
     maximum_size : QSize
         Maximum dialog size
     parent : QWidget, optional
@@ -22,11 +22,39 @@ class QImageSelect(QDialog):
     Returns
     -------
     QPixmap
-        Cropped pixmap
+        Cropped qpixmap
     """
 
     result = None
     ROTATE_BTN_MAX_WIDTH = 35
+
+    @classmethod
+    def spawn(cls, title: str, image: Union[str, QPixmap], maximum_size: QSize, parent: QWidget = None) -> QPixmap:
+        """Create instance of QImageSelect, execute it and return cropped qpixmap
+
+        Parameters
+        ----------
+        title : str
+            Dialog title
+        image : Union[str, QPixmap]
+            Image path or qpixmap
+        maximum_size : QSize
+            Maximum dialog size
+        parent : QWidget, optional
+            Parent widget, by default None
+
+        Returns
+        -------
+        QPixmap
+            Cropped qpixmap
+        """
+        dialog = cls(title=title, image=image, maximum_size=maximum_size, parent=parent)
+        if not dialog.exec():
+            return None
+        rect = dialog.pic.selected_rect
+        if not rect:
+            rect = dialog.pixmap.rect()
+        return dialog.pixmap.copy(rect.x(), rect.y(), rect.width(), rect.height())
 
     def __init__(self, title: str, image: Union[str, QPixmap], maximum_size: QSize, parent: QWidget = None):
         """Create instance of QImageSelect."""
@@ -58,7 +86,7 @@ class QImageSelect(QDialog):
         self.adjust_image(0)
 
         self.setMouseTracking(True)
-        self.btn_ok.clicked.connect(self.ok)
+        self.btn_ok.clicked.connect(self.accept)
         self.btn_rotate.clicked.connect(lambda: self.adjust_image())
 
     def adjust_image(self, rotate_degree: int = 90):
@@ -70,14 +98,6 @@ class QImageSelect(QDialog):
         hight = self.pixmap.height()
         self.setFixedSize(width, hight + 45)
         self.pic.setPixmap(self.pixmap)
-
-    def ok(self):
-        rect = self.pic.selected_rect
-        if rect:
-            self.result = self.pixmap.copy(rect.x(), rect.y(), rect.width(), rect.height())
-        else:
-            self.result = self.pixmap.copy()
-        self.accept()
 
     class QImageLabel(QLabel):
         """Customized QLabel with rubberband support.

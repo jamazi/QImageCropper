@@ -15,12 +15,9 @@ def main(argv):
     else:
         sample = QPixmap(600, 400)
         sample.fill(random.choice([Qt.red, Qt.yellow, Qt.green, Qt.blue]))
-    dialog = QImageSelect(title="select image", image=sample, maximum_size=QSize(600, 400))
-    dialog.exec()
-    pixmap = dialog.result
+    pixmap = QImageSelect.spawn(title="select image", image=sample, maximum_size=QSize(600, 400))
     if pixmap:
-        dialog = QImageSelect(title="result", image=pixmap, maximum_size=QSize(200, 200))
-        dialog.exec()
+        QImageSelect.spawn(title="result", image=pixmap, maximum_size=QSize(200, 200))
 
 
 if __name__ == "__main__":
