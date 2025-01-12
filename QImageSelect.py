@@ -141,7 +141,7 @@ class QImageSelect(QDialog):
         ).transformed(self.transform, Qt.TransformationMode.SmoothTransformation)
         width = pixmap.width()
         hight = pixmap.height()
-        self.setFixedSize(width, hight + 45)
+        self.setFixedSize(width, hight + 64)
         self.view.setPixmap(pixmap)
 
     class QImageLabel(QLabel):
